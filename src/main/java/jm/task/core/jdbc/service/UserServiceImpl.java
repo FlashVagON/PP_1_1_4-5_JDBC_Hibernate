@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
         dao.dropUsersTable();
     }
 
-    public void saveUser(String name, String lastName, byte age) throws SQLException {
+    public void saveUser(String name, String lastName, byte age) {
         dao.saveUser(name, lastName, age);
     }
 
