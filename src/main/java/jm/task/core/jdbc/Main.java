@@ -10,7 +10,7 @@ public class Main {
         usr.saveUser("busiya", "truth", (byte) 80);
         usr.saveUser("gerz", "pups", (byte) 25);
         usr.saveUser("piu", "piu", (byte) 40);
-
+        System.out.println(usr.getAllUsers());
 
 
 
