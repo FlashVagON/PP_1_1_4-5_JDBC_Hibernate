@@ -4,8 +4,8 @@ import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import javax.persistence.criteria.CriteriaQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
@@ -16,26 +16,42 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        Session session = Util.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
+        try (Session session = Util.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
 
-        session.createSQLQuery("CREATE TABLE IF NOT EXISTS users " +
+            session.createSQLQuery("CREATE TABLE IF NOT EXISTS User " +
                 "(id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
                 "name VARCHAR(50) NOT NULL, lastName VARCHAR(50) NOT NULL, " +
                 "age TINYINT NOT NULL)").executeUpdate();
 
-        transaction.commit();
-        session.close();
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println("Error "+ e.getMessage());
+        }
     }
 
     @Override
     public void dropUsersTable() {
+        try (Session session = Util.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
 
+            session.createSQLQuery("DROP TABLE IF EXISTS User").executeUpdate();
+
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println("Error "+ e.getMessage());
+        }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-
+        try (Session session = Util.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.save(new User(name, lastName, age));
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println("Error "+ e.getMessage());
+        }
     }
 
     @Override
@@ -45,11 +61,25 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        List<User> result = new ArrayList<>();
+        try (Session session = Util.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            result = session.createQuery("From User", User.class).getResultList();
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println("Error "+ e.getMessage());
+        }
+        return result;
     }
 
     @Override
     public void cleanUsersTable() {
-
+        try (Session session = Util.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.createQuery("delete From User ").executeUpdate();
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println("Error "+ e.getMessage());
+        }
     }
 }
