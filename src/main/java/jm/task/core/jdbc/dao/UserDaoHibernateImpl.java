@@ -56,7 +56,15 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void removeUserById(long id) {
-
+        try (Session session = Util.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            User usr = new User();
+            usr.setId(id);
+            session.remove(usr);
+            transaction.commit();
+        } catch (Exception e) {
+            System.out.println("Error "+ e.getMessage());
+        }
     }
 
     @Override

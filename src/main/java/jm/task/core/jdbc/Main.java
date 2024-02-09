@@ -1,8 +1,8 @@
 package jm.task.core.jdbc;
-import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
+import jm.task.core.jdbc.dao.UserDaoHibernateImpl;
 
 public class Main {
-    static UserDaoJDBCImpl usr = new UserDaoJDBCImpl();
+    static UserDaoHibernateImpl usr = new UserDaoHibernateImpl();
     public static void main(String[] args) {
 
         usr.createUsersTable();
@@ -10,7 +10,9 @@ public class Main {
         usr.saveUser("busiya", "truth", (byte) 80);
         usr.saveUser("gerz", "pups", (byte) 25);
         usr.saveUser("piu", "piu", (byte) 40);
+        usr.removeUserById(3);
         System.out.println(usr.getAllUsers());
+
 
 
 
